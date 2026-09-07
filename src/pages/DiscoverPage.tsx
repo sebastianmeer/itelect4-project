@@ -17,7 +17,10 @@ export function DiscoverPage(): JSX.Element {
     <div className="flex flex-col gap-6 pt-1">
       <ModeSwitch />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {/* A phone's screen is never wide enough for a multi-column browse
+          grid, so Discover always stacks one full-width profile at a time --
+          matching the reference's single-card browse pattern. */}
+      <div className="flex flex-col gap-6">
         {mockProfiles.map((profile: UserProfile): JSX.Element => (
           <UserCard
             key={profile.id}

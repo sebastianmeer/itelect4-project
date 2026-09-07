@@ -1,5 +1,6 @@
 import type { JSX, MouseEvent } from "react";
 import type { UserProfile } from "../types/index.js";
+import { HeartIcon, XIcon } from "./icons.js";
 
 export interface UserCardProps {
   profile: UserProfile;
@@ -23,22 +24,43 @@ export function UserCard({
   };
 
   return (
-    <article className="flex w-full flex-col overflow-hidden rounded-3xl border border-orbit-border bg-orbit-surface shadow-sm">
-      <div className="relative aspect-[4/5] w-full overflow-hidden bg-orbit-border">
-        <img
-          src={profile.avatarUrl}
-          alt={profile.name}
-          className="h-full w-full object-cover"
-        />
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-4">
-          <p className="text-lg font-semibold text-white">
-            {profile.name}, {profile.age}
-          </p>
-          <p className="text-sm text-white/80">{profile.location}</p>
+    <article className="orbit-card flex w-full flex-col overflow-hidden rounded-3xl">
+      <div className="relative aspect-[4/5] w-full bg-orbit-border">
+        <div className="absolute inset-0 overflow-hidden">
+          <img
+            src={profile.avatarUrl}
+            alt={profile.name}
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent p-4 pb-8">
+            <p className="text-lg font-semibold text-white">
+              {profile.name}, {profile.age}
+            </p>
+            <p className="text-sm text-white/80">{profile.location}</p>
+          </div>
+        </div>
+
+        <div className="absolute inset-x-0 -bottom-6 flex justify-center gap-4">
+          <button
+            type="button"
+            onClick={handlePass}
+            aria-label={`Pass on ${profile.name}`}
+            className="flex h-12 w-12 items-center justify-center rounded-full bg-orbit-surface text-orbit-muted shadow-[0_12px_24px_-8px_rgba(20,23,15,0.45)] transition hover:scale-105 hover:text-orbit-coral focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orbit-ink-soft"
+          >
+            <XIcon className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            onClick={handleSignal}
+            aria-label={`Send a Signal to ${profile.name}`}
+            className="flex h-12 w-12 items-center justify-center rounded-full bg-orbit-ink text-orbit-bg shadow-[0_12px_24px_-8px_rgba(20,23,15,0.55)] transition hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orbit-ink-soft"
+          >
+            <HeartIcon className="h-5 w-5" />
+          </button>
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 p-4">
+      <div className="flex flex-col gap-3 p-4 pt-9">
         <p className="text-sm text-orbit-muted">{profile.bio}</p>
 
         <ul className="flex flex-wrap gap-2">
@@ -51,25 +73,6 @@ export function UserCard({
             </li>
           ))}
         </ul>
-
-        <div className="mt-1 flex items-center gap-3">
-          <button
-            type="button"
-            onClick={handlePass}
-            aria-label={`Pass on ${profile.name}`}
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-orbit-border text-orbit-muted transition hover:border-orbit-ink-soft hover:text-orbit-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orbit-ink-soft"
-          >
-            ✕
-          </button>
-          <button
-            type="button"
-            onClick={handleSignal}
-            aria-label={`Send a Signal to ${profile.name}`}
-            className="flex h-11 flex-1 items-center justify-center gap-2 rounded-full bg-orbit-ink px-4 text-sm font-semibold text-orbit-bg transition hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orbit-ink-soft"
-          >
-            Send a Signal
-          </button>
-        </div>
       </div>
     </article>
   );

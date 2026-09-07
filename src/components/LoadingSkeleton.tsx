@@ -10,11 +10,22 @@ export function LoadingSkeleton({ rows = 3 }: LoadingSkeletonProps): JSX.Element
       {Array.from({ length: rows }).map((_, index: number): JSX.Element => (
         <div
           key={index}
-          className="flex animate-pulse flex-col gap-3 rounded-3xl border border-orbit-border bg-orbit-surface p-5"
+          className="orbit-card flex flex-col gap-3 rounded-3xl p-5"
         >
-          <div className="h-5 w-20 rounded-full bg-orbit-bg" />
-          <div className="h-4 w-4/5 rounded bg-orbit-bg" />
-          <div className="h-4 w-2/5 rounded bg-orbit-bg" />
+          <div className="flex items-center justify-between">
+            <div className="orbit-shimmer h-5 w-20 rounded-full" />
+            <div className="orbit-shimmer h-6 w-6 rounded-full" />
+          </div>
+          <div className="orbit-shimmer h-4 w-4/5 rounded-full" />
+          <div className="orbit-shimmer h-4 w-3/5 rounded-full" />
+          <div className="flex items-center gap-2 pt-1">
+            <div className="flex -space-x-1.5">
+              <div className="orbit-shimmer h-6 w-6 rounded-full ring-2 ring-orbit-surface" />
+              <div className="orbit-shimmer h-6 w-6 rounded-full ring-2 ring-orbit-surface" />
+              <div className="orbit-shimmer h-6 w-6 rounded-full ring-2 ring-orbit-surface" />
+            </div>
+            <div className="orbit-shimmer h-3 w-16 rounded-full" />
+          </div>
         </div>
       ))}
     </div>
