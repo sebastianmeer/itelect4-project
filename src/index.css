@@ -17,6 +17,29 @@
   --color-orbit-coral: #e17064;
   --color-orbit-blue: #6e8fd9;
   --color-orbit-teal: #4fa184;
+
+  /* Shadcn semantic tokens, mapped onto the Orbit palette above so
+     shadcn/ui components render in the same design language. */
+  --radius: 0.875rem;
+  --color-background: var(--color-orbit-bg);
+  --color-foreground: var(--color-orbit-ink);
+  --color-card: var(--color-orbit-surface);
+  --color-card-foreground: var(--color-orbit-ink);
+  --color-popover: var(--color-orbit-surface);
+  --color-popover-foreground: var(--color-orbit-ink);
+  --color-primary: var(--color-orbit-ink);
+  --color-primary-foreground: var(--color-orbit-bg);
+  --color-secondary: var(--color-orbit-surface);
+  --color-secondary-foreground: var(--color-orbit-ink-soft);
+  --color-muted: var(--color-orbit-bg);
+  --color-muted-foreground: var(--color-orbit-muted);
+  --color-accent: var(--color-orbit-surface);
+  --color-accent-foreground: var(--color-orbit-ink);
+  --color-destructive: var(--color-orbit-coral);
+  --color-destructive-foreground: var(--color-orbit-bg);
+  --color-border: var(--color-orbit-border);
+  --color-input: var(--color-orbit-border);
+  --color-ring: var(--color-orbit-ink-soft);
 }
 
 :root {

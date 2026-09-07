@@ -29,6 +29,8 @@ export interface ExploreResponse {
   body: string;
   createdAt: Date;
   signalCount: number;
+  /** Per-response display name override; omitted when posted anonymously. */
+  authorName?: string;
 }
 
 export interface Connection {

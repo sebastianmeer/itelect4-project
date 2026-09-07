@@ -6,7 +6,11 @@
       "age": 21,
       "bio": "Building Orbit between classes.",
       "avatarUrl": "https://i.pravatar.cc/160?img=13",
-      "interests": ["Tech", "Music", "Deep Talks"],
+      "interests": [
+        "Tech",
+        "Music",
+        "Deep Talks"
+      ],
       "location": "Batangas"
     },
     {
@@ -15,7 +19,11 @@
       "age": 22,
       "bio": "Probably overthinking a movie ending somewhere.",
       "avatarUrl": "https://i.pravatar.cc/160?img=47",
-      "interests": ["Movies", "Gaming", "Coffee"],
+      "interests": [
+        "Movies",
+        "Gaming",
+        "Coffee"
+      ],
       "location": "Batangas"
     },
     {
@@ -24,7 +32,10 @@
       "age": 24,
       "bio": "Still trying to beat Hollow Knight.",
       "avatarUrl": "https://i.pravatar.cc/160?img=12",
-      "interests": ["Gaming", "Tech"],
+      "interests": [
+        "Gaming",
+        "Tech"
+      ],
       "location": "Manila"
     },
     {
@@ -33,7 +44,10 @@
       "age": 23,
       "bio": "Will talk about food for three hours, no notice needed.",
       "avatarUrl": "https://i.pravatar.cc/160?img=32",
-      "interests": ["Food", "Deep Talks"],
+      "interests": [
+        "Food",
+        "Deep Talks"
+      ],
       "location": "Lipa"
     },
     {
@@ -42,7 +56,10 @@
       "age": 25,
       "bio": "Front-row at every gig within driving distance.",
       "avatarUrl": "https://i.pravatar.cc/160?img=25",
-      "interests": ["Music", "Movies"],
+      "interests": [
+        "Music",
+        "Movies"
+      ],
       "location": "Manila"
     }
   ],
@@ -131,5 +148,6 @@
       "status": "pending",
       "createdAt": "2026-09-07T07:00:00.000Z"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
