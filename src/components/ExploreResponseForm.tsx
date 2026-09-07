@@ -75,7 +75,7 @@ export function ExploreResponseForm({ promptId }: ExploreResponseFormProps): JSX
           rows={3}
           placeholder="What's your take?"
           aria-invalid={errors.answer !== undefined}
-          className="rounded-2xl border border-orbit-border bg-orbit-surface px-4 py-3 text-sm text-orbit-ink placeholder:text-orbit-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orbit-ink-soft"
+          className="orbit-card rounded-2xl px-4 py-3 text-sm text-orbit-ink placeholder:text-orbit-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orbit-ink-soft"
           {...register("answer")}
         />
         <p className="min-h-[1rem] text-xs text-destructive">
@@ -86,11 +86,16 @@ export function ExploreResponseForm({ promptId }: ExploreResponseFormProps): JSX
       <label className="flex items-center gap-2 text-sm text-orbit-muted">
         <input
           type="checkbox"
+          aria-describedby="response-anonymous-error"
+          aria-invalid={errors.anonymous !== undefined}
           className="h-4 w-4 rounded border-orbit-border"
           {...register("anonymous")}
         />
         Post anonymously
       </label>
+      <p id="response-anonymous-error" className="min-h-[1rem] text-xs text-destructive">
+        {errors.anonymous?.message ?? ""}
+      </p>
 
       <Button type="submit" disabled={submitResponse.isPending} className="self-end">
         {submitResponse.isPending ? "Posting..." : "Post answer"}

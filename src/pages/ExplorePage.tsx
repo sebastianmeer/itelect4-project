@@ -6,9 +6,13 @@ import { LoadingSkeleton } from "../components/LoadingSkeleton.js";
 import { EmptyState } from "../components/EmptyState.js";
 import { ErrorState } from "../components/ErrorState.js";
 import { ModeSwitch } from "../components/ModeSwitch.js";
+import { CompassIcon, SearchIcon } from "../components/icons.js";
+import { Button } from "../components/ui/button.js";
+import { Input } from "../components/ui/input.js";
+import { Label } from "../components/ui/label.js";
 import { usePrevious } from "../hooks/usePrevious.js";
 import { getPrompts } from "../api/client.js";
-import { getCategoryTheme } from "../lib/categoryTheme.js";
+import { getCategoryTheme, type CategoryTheme } from "../lib/categoryTheme.js";
 import { useUiStore, type CategoryFilter } from "../stores/uiStore.js";
 import { ExploreCategory, type ExplorePrompt } from "../types/index.js";
 
@@ -67,6 +71,14 @@ export function ExplorePage(): JSX.Element {
       .slice(0, 3);
   }, [prompts]);
 
+  const promptCountByCategory = useMemo((): Record<string, number> => {
+    const counts: Record<string, number> = {};
+    for (const prompt of prompts) {
+      counts[prompt.category] = (counts[prompt.category] ?? 0) + 1;
+    }
+    return counts;
+  }, [prompts]);
+
   const showCrossedPaths: boolean =
     previousCategory !== undefined &&
     previousCategory !== selectedCategory &&
@@ -77,23 +89,31 @@ export function ExplorePage(): JSX.Element {
       <ModeSwitch />
 
       <div className="flex items-center gap-2">
-        <input
-          ref={searchInputRef}
-          type="text"
-          value={searchQuery}
-          onChange={handleSearchChange}
-          placeholder="Find something worth talking about"
-          aria-label="Search Explore prompts"
-          className="h-11 flex-1 rounded-full border border-orbit-border bg-orbit-surface px-4 text-sm text-orbit-ink placeholder:text-orbit-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orbit-ink-soft"
-        />
-        <button
+        <div className="relative flex-1">
+          <SearchIcon className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-orbit-muted" />
+          <Label htmlFor="explore-search" className="sr-only">
+            Search Explore prompts
+          </Label>
+          <Input
+            id="explore-search"
+            ref={searchInputRef}
+            type="text"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            placeholder="Find something worth talking about"
+            className="h-11 w-full rounded-full pl-10 pr-4"
+          />
+        </div>
+        <Button
           type="button"
           onClick={handleFocusSearch}
           aria-label="Focus the Explore search field"
-          className="flex h-11 w-11 items-center justify-center rounded-full border border-orbit-border bg-orbit-surface text-orbit-ink transition hover:bg-orbit-bg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orbit-ink-soft"
+          size="icon"
+          variant="outline"
+          className="h-11 w-11 rounded-full"
         >
-          ⌕
-        </button>
+          <SearchIcon className="h-4 w-4" />
+        </Button>
       </div>
 
       {!isLoading && !isError && trendingPrompts.length > 0 && (
@@ -119,21 +139,40 @@ export function ExplorePage(): JSX.Element {
 
       <section className="flex flex-col gap-3">
         <h2 className="text-base font-semibold text-orbit-ink">Your Circles</h2>
-        <div className="flex flex-wrap gap-2">
-          {circleOptions.map((category: CategoryFilter): JSX.Element => (
-            <button
-              key={category}
-              type="button"
-              onClick={(): void => setSelectedCategory(category)}
-              className={`rounded-full border px-3.5 py-1.5 text-sm font-medium transition ${
-                selectedCategory === category
-                  ? "border-orbit-ink bg-orbit-ink text-orbit-bg"
-                  : "border-orbit-border bg-orbit-surface text-orbit-ink-soft"
-              }`}
-            >
-              {circleLabel(category)}
-            </button>
-          ))}
+        <div className="flex gap-3 overflow-x-auto pb-1">
+          {circleOptions.map((category: CategoryFilter): JSX.Element => {
+            const isActive = selectedCategory === category;
+            const theme: CategoryTheme | null =
+              category === "all" ? null : getCategoryTheme(category);
+            const count = category === "all" ? prompts.length : (promptCountByCategory[category] ?? 0);
+
+            return (
+              <button
+                key={category}
+                type="button"
+                onClick={(): void => setSelectedCategory(category)}
+                className={`orbit-card flex w-16 shrink-0 flex-col items-center gap-1.5 rounded-2xl px-2 py-2.5 text-center transition @xs:w-[4.5rem] @xs:py-3 @sm:w-20 ${
+                  isActive ? "ring-2 ring-orbit-ink" : ""
+                }`}
+              >
+                <span
+                  className={`flex h-8 w-8 items-center justify-center rounded-xl @sm:h-9 @sm:w-9 ${
+                    theme ? theme.bgClass : "bg-orbit-bg"
+                  } ${theme ? theme.textClass : "text-orbit-ink"}`}
+                >
+                  {theme ? (
+                    <theme.Icon className="h-3.5 w-3.5 @sm:h-4 @sm:w-4" />
+                  ) : (
+                    <CompassIcon className="h-3.5 w-3.5 @sm:h-4 @sm:w-4" />
+                  )}
+                </span>
+                <span className="text-[11px] font-semibold text-orbit-ink @sm:text-xs">
+                  {circleLabel(category)}
+                </span>
+                <span className="text-[10px] text-orbit-muted">{count}</span>
+              </button>
+            );
+          })}
         </div>
         {showCrossedPaths && (
           <p className="text-xs text-orbit-muted">

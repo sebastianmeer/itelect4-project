@@ -1,8 +1,7 @@
 import type { JSX } from "react";
-import { UserCard } from "../components/UserCard.js";
+import { SwipeDeck } from "../components/SwipeDeck.js";
 import { ModeSwitch } from "../components/ModeSwitch.js";
 import { mockProfiles } from "../lib/mockData.js";
-import type { UserProfile } from "../types/index.js";
 
 export function DiscoverPage(): JSX.Element {
   const handleSignal = (profileId: string): void => {
@@ -14,19 +13,14 @@ export function DiscoverPage(): JSX.Element {
   };
 
   return (
-    <div className="flex flex-col gap-6 pt-1">
+    <div className="flex flex-col gap-4 pt-1">
       <ModeSwitch />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {mockProfiles.map((profile: UserProfile): JSX.Element => (
-          <UserCard
-            key={profile.id}
-            profile={profile}
-            onSignal={handleSignal}
-            onPass={handlePass}
-          />
-        ))}
-      </div>
+      <SwipeDeck profiles={mockProfiles} onSignal={handleSignal} onPass={handlePass} />
+
+      <p className="pb-2 text-center text-xs text-orbit-muted">
+        Drag a card, or use the buttons, to pass or send a Signal.
+      </p>
     </div>
   );
 }

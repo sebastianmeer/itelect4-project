@@ -8,7 +8,7 @@ export function ModeSwitch(): JSX.Element {
     }`;
 
   return (
-    <div className="flex rounded-full bg-orbit-surface p-1">
+    <div className="orbit-card flex rounded-full p-1">
       <NavLink to="/explore" className={linkClass}>
         Explore
       </NavLink>

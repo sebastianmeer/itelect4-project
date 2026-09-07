@@ -5,6 +5,7 @@ import { NotFoundPage } from "./NotFoundPage.js";
 import { EmptyState } from "../components/EmptyState.js";
 import { LoadingSkeleton } from "../components/LoadingSkeleton.js";
 import { ExploreResponseForm } from "../components/ExploreResponseForm.js";
+import { ArrowLeftIcon, MessageIcon } from "../components/icons.js";
 import { getCategoryTheme } from "../lib/categoryTheme.js";
 import { mockProfiles } from "../lib/mockData.js";
 import { getPromptById, getResponsesByPromptId } from "../api/client.js";
@@ -40,15 +41,15 @@ export function PromptDetailPage(): JSX.Element {
       <button
         type="button"
         onClick={handleBack}
-        className="flex w-fit items-center gap-1 text-sm font-medium text-orbit-muted transition hover:text-orbit-ink"
+        className="flex w-fit items-center gap-1.5 text-sm font-medium text-orbit-muted transition hover:text-orbit-ink"
       >
-        <span aria-hidden="true">&larr;</span> Back to Explore
+        <ArrowLeftIcon className="h-4 w-4" /> Back to Explore
       </button>
 
       {promptQuery.isLoading || promptQuery.data === undefined ? (
         <LoadingSkeleton rows={1} />
       ) : (
-        <div className="flex flex-col gap-3 rounded-3xl border border-orbit-border bg-orbit-surface p-5">
+        <div className="orbit-card flex flex-col gap-3 rounded-3xl p-5">
           <span
             className={`inline-flex w-fit items-center rounded-full px-3 py-1 text-xs font-semibold ${getCategoryTheme(promptQuery.data.category).bgClass} ${getCategoryTheme(promptQuery.data.category).textClass}`}
           >
@@ -57,9 +58,10 @@ export function PromptDetailPage(): JSX.Element {
           <p className="text-lg font-semibold leading-snug text-orbit-ink">
             {promptQuery.data.question}
           </p>
-          <span className="text-sm text-orbit-muted">
+          <div className="flex items-center gap-1.5 text-sm text-orbit-muted">
+            <MessageIcon className="h-3.5 w-3.5" />
             {promptQuery.data.responseCount} joined
-          </span>
+          </div>
         </div>
       )}
 
@@ -87,7 +89,7 @@ export function PromptDetailPage(): JSX.Element {
               return (
                 <li
                   key={response.id}
-                  className="flex flex-col gap-1 rounded-2xl border border-orbit-border bg-orbit-surface p-4"
+                  className="orbit-card flex flex-col gap-1 rounded-2xl p-4"
                 >
                   <span className="text-sm font-semibold text-orbit-ink">
                     {response.authorName ?? author?.name ?? "Someone"}

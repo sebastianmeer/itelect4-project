@@ -15,18 +15,18 @@ export function ConnectionsPage(): JSX.Element {
           message="Send a Signal in Explore or Discover to start one."
         />
       ) : (
-        <ul className="flex flex-col gap-2">
+        <ul className="flex flex-col gap-2.5">
           {mockConnections.map((connection: Connection): JSX.Element => {
             const connectedProfile = getById(mockProfiles, connection.connectedUserId);
             return (
               <li
                 key={connection.id}
-                className="flex items-center gap-3 rounded-2xl border border-orbit-border bg-orbit-surface px-4 py-3"
+                className="orbit-card flex items-center gap-3 rounded-2xl px-4 py-3"
               >
                 <img
                   src={connectedProfile?.avatarUrl}
                   alt={connectedProfile?.name ?? "Orbit member"}
-                  className="h-10 w-10 rounded-full object-cover"
+                  className="h-10 w-10 rounded-full object-cover ring-2 ring-orbit-bg"
                 />
                 <span className="flex-1 text-sm font-medium text-orbit-ink">
                   {connectedProfile?.name ?? "Someone"}
