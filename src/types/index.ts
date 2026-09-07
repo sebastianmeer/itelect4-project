@@ -93,3 +93,21 @@ export type NewExploreResponse = Omit<
 
 // Explore prompts bucketed by their Circle/category.
 export type PromptGroups = Record<ExploreCategory, ExplorePrompt[]>;
+
+// ===== API TYPES =====
+// json-server serializes dates as strings; these mirror the domain
+// entities but with `createdAt` narrowed to the wire format.
+
+export type ExplorePromptApi = Omit<ExplorePrompt, "createdAt"> & {
+  createdAt: string;
+};
+
+export type ExploreResponseApi = Omit<ExploreResponse, "createdAt"> & {
+  createdAt: string;
+};
+
+// Payload for POSTing a new Explore response; the client stamps createdAt,
+// the server assigns the id.
+export type NewExploreResponseApi = Omit<ExploreResponse, "id" | "createdAt"> & {
+  createdAt: string;
+};
