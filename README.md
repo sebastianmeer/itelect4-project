@@ -12,12 +12,13 @@ communication style get a chance to matter before or alongside appearance.
 
 ## Explore Mode
 
-Explore is Orbit's signature experience. Instead of judging profiles, users
-respond to conversation prompts, opinions, and interest-based topics inside
-**Circles** (Gaming, Music, Movies, Food, Tech, Deep Talks, and more). Replying
-to someone's answer can turn into a conversation — an **Encounter** — and, if
-interest is mutual, a **Connection**. Explore is designed to feel useful and
-entertaining on its own, not just as a funnel toward a match.
+Explore is Orbit's signature experience and the app's default landing page.
+Instead of judging profiles, users respond to conversation prompts, opinions,
+and interest-based topics inside **Circles** (Gaming, Music, Movies, Food,
+Tech, Deep Talks, and more). Replying to someone's answer can turn into a
+conversation, and if interest is mutual, a **Connection**. Explore is
+designed to feel useful and entertaining on its own, not just as a funnel
+toward a match.
 
 ## Discover Mode
 
@@ -26,25 +27,52 @@ bios, and interests, and send a **Signal** (a lightweight expression of
 interest) or pass. It stays intentionally secondary to Explore in this
 project.
 
-## Current Technology
+## Core Features
 
-This milestone (GT1) is a TypeScript foundation only — no UI yet.
+- Explore prompts, organized into Circles
+- Prompt detail pages with existing responses and a validated response form
+- Signals and Connections
+- Discover profile browsing
+- Mobile-style web UI with a centered phone-shaped shell on desktop
+- Dark mode
+- Client-side routing with protected pages
+- A local json-server API with persisted client state
+- Form validation with React Hook Form + Zod
 
-- Node.js
+## Tech Stack
+
 - TypeScript (strict mode)
-- ts-node (for running `.ts` files directly)
+- React + Vite
+- Tailwind CSS
+- React Router
+- Zustand (with persisted auth state)
+- TanStack Query
+- json-server
+- React Hook Form + Zod
+- shadcn/ui (Button, Input, Label)
 
 ## Project Structure
 
 ```text
 itelect4-project/
+├─ db.json                 # json-server data: profiles, prompts, responses, connections
+├─ sample.ts                # Strict-TypeScript conversion of the provided sample.js (GT1)
 ├─ src/
-│  └─ index.ts       # Orbit domain interfaces in use, generics, utility types
-├─ types/
-│  └─ index.ts        # UserProfile, ExplorePrompt, ExploreResponse, Connection, enums, ApiResponse<T>
-├─ sample.ts           # Strict-TypeScript conversion of the provided sample.js
-├─ tsconfig.json
-└─ package.json
+│  ├─ api/client.ts          # Centralized fetch calls to the json-server API
+│  ├─ components/            # Reusable Orbit components + shadcn/ui primitives
+│  ├─ hooks/                 # useToggle, usePrevious
+│  ├─ layouts/Layout.tsx      # Shared header + bottom nav + <Outlet />
+│  ├─ pages/                 # LoginPage, ExplorePage, PromptDetailPage, DiscoverPage,
+│  │                          # ConnectionsPage, ProfilePage, NotFoundPage
+│  ├─ schemas/                # Zod schemas
+│  ├─ stores/                 # Zustand stores (auth, ui)
+│  ├─ types/index.ts           # Orbit domain + API types, generics, enums
+│  ├─ App.tsx                 # Route table
+│  ├─ main.tsx                 # App entry: providers + BrowserRouter
+│  └─ index.ts                 # GT1 TypeScript foundation script (kept for evidence)
+├─ tsconfig.json / tsconfig.app.json / tsconfig.node.json
+├─ components.json           # shadcn/ui config
+└─ vite.config.ts
 ```
 
 ## Setup
@@ -55,28 +83,30 @@ npm install
 
 ## Run
 
+Start the local API (port `3001`) and the dev server in two terminals:
+
+```bash
+npm run api
+npm run dev
+```
+
+To run the original GT1 TypeScript foundation script directly:
+
 ```bash
 npm run start
 ```
 
-Runs `src/index.ts` directly via `ts-node`.
-
-To run the standalone converted sample:
+## Build & type-check
 
 ```bash
-node --loader ts-node/esm sample.ts
+npm run build
+npx tsc -b
 ```
 
-## Type-check
+Both must complete with zero TypeScript errors.
+
+The GT1-era `sample.ts` at the project root type-checks independently:
 
 ```bash
-npm run typecheck
+npm run typecheck:gt1
 ```
-
-or directly:
-
-```bash
-npx tsc --noEmit
-```
-
-This must complete with zero TypeScript errors.

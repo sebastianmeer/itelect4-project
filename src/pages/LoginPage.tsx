@@ -1,6 +1,9 @@
 import { useState, type ChangeEvent, type FormEvent, type JSX } from "react";
 import { useNavigate } from "react-router";
 import { MobileShell } from "../components/MobileShell.js";
+import { Button } from "@/components/ui/button.js";
+import { Input } from "@/components/ui/input.js";
+import { Label } from "@/components/ui/label.js";
 import { useAuthStore } from "../stores/authStore.js";
 
 export function LoginPage(): JSX.Element {
@@ -33,24 +36,19 @@ export function LoginPage(): JSX.Element {
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <label className="flex flex-col gap-1.5 text-sm font-medium text-orbit-ink-soft">
-            Email
-            <input
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="login-email">Email</Label>
+            <Input
+              id="login-email"
               type="email"
               value={email}
               onChange={handleEmailChange}
               required
               placeholder="you@example.com"
-              className="h-11 rounded-full border border-orbit-border bg-orbit-surface px-4 text-sm text-orbit-ink placeholder:text-orbit-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orbit-ink-soft"
             />
-          </label>
+          </div>
 
-          <button
-            type="submit"
-            className="h-11 rounded-full bg-orbit-ink text-sm font-semibold text-orbit-bg transition hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orbit-ink-soft"
-          >
-            Get Started
-          </button>
+          <Button type="submit">Get Started</Button>
         </form>
       </div>
     </MobileShell>
