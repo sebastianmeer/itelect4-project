@@ -8,8 +8,8 @@ import type {
   UserProfileUpdate,
   NewExploreResponse,
   PromptGroups,
-} from "../types/index.js";
-import { ExploreCategory, ConnectionStatus, getById } from "../types/index.js";
+} from "./types/index.js";
+import { ExploreCategory, ConnectionStatus, getById } from "./types/index.js";
 
 // ===== PRIMITIVE TYPE ANNOTATIONS =====
 const appName: string = "Orbit";
