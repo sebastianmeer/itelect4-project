@@ -86,11 +86,16 @@ export function ExploreResponseForm({ promptId }: ExploreResponseFormProps): JSX
       <label className="flex items-center gap-2 text-sm text-orbit-muted">
         <input
           type="checkbox"
+          aria-describedby="response-anonymous-error"
+          aria-invalid={errors.anonymous !== undefined}
           className="h-4 w-4 rounded border-orbit-border"
           {...register("anonymous")}
         />
         Post anonymously
       </label>
+      <p id="response-anonymous-error" className="min-h-[1rem] text-xs text-destructive">
+        {errors.anonymous?.message ?? ""}
+      </p>
 
       <Button type="submit" disabled={submitResponse.isPending} className="self-end">
         {submitResponse.isPending ? "Posting..." : "Post answer"}

@@ -7,6 +7,9 @@ import { EmptyState } from "../components/EmptyState.js";
 import { ErrorState } from "../components/ErrorState.js";
 import { ModeSwitch } from "../components/ModeSwitch.js";
 import { CompassIcon, SearchIcon } from "../components/icons.js";
+import { Button } from "../components/ui/button.js";
+import { Input } from "../components/ui/input.js";
+import { Label } from "../components/ui/label.js";
 import { usePrevious } from "../hooks/usePrevious.js";
 import { getPrompts } from "../api/client.js";
 import { getCategoryTheme, type CategoryTheme } from "../lib/categoryTheme.js";
@@ -88,24 +91,29 @@ export function ExplorePage(): JSX.Element {
       <div className="flex items-center gap-2">
         <div className="relative flex-1">
           <SearchIcon className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-orbit-muted" />
-          <input
+          <Label htmlFor="explore-search" className="sr-only">
+            Search Explore prompts
+          </Label>
+          <Input
+            id="explore-search"
             ref={searchInputRef}
             type="text"
             value={searchQuery}
             onChange={handleSearchChange}
             placeholder="Find something worth talking about"
-            aria-label="Search Explore prompts"
-            className="orbit-card h-11 w-full rounded-full pl-10 pr-4 text-sm text-orbit-ink placeholder:text-orbit-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orbit-ink-soft"
+            className="h-11 w-full rounded-full pl-10 pr-4"
           />
         </div>
-        <button
+        <Button
           type="button"
           onClick={handleFocusSearch}
           aria-label="Focus the Explore search field"
-          className="orbit-card flex h-11 w-11 items-center justify-center rounded-full text-orbit-ink transition hover:bg-orbit-bg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orbit-ink-soft"
+          size="icon"
+          variant="outline"
+          className="h-11 w-11 rounded-full"
         >
           <SearchIcon className="h-4 w-4" />
-        </button>
+        </Button>
       </div>
 
       {!isLoading && !isError && trendingPrompts.length > 0 && (
