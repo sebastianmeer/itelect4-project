@@ -1,11 +1,5 @@
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type ChangeEvent,
-  type JSX,
-} from "react";
+import { useMemo, useRef, useState, type ChangeEvent, type JSX } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { ExplorePromptCard } from "../components/ExplorePromptCard.js";
 import { LoadingSkeleton } from "../components/LoadingSkeleton.js";
@@ -13,11 +7,10 @@ import { EmptyState } from "../components/EmptyState.js";
 import { ErrorState } from "../components/ErrorState.js";
 import { ModeSwitch } from "../components/ModeSwitch.js";
 import { usePrevious } from "../hooks/usePrevious.js";
-import { loadExplorePrompts } from "../lib/mockData.js";
+import { getPrompts } from "../api/client.js";
 import { getCategoryTheme } from "../lib/categoryTheme.js";
+import { useUiStore, type CategoryFilter } from "../stores/uiStore.js";
 import { ExploreCategory, type ExplorePrompt } from "../types/index.js";
-
-type CategoryFilter = ExploreCategory | "all";
 
 const circleOptions: CategoryFilter[] = ["all", ...Object.values(ExploreCategory)];
 
@@ -28,34 +21,22 @@ function circleLabel(category: CategoryFilter): string {
 export function ExplorePage(): JSX.Element {
   const navigate = useNavigate();
 
-  const [prompts, setPrompts] = useState<ExplorePrompt[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [loadError, setLoadError] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>("all");
+  const selectedCategory = useUiStore((state) => state.selectedCategory);
+  const setSelectedCategory = useUiStore((state) => state.setSelectedCategory);
 
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const previousCategory = usePrevious<CategoryFilter>(selectedCategory);
 
-  const fetchPrompts = (): void => {
-    setIsLoading(true);
-    setLoadError(null);
-
-    loadExplorePrompts()
-      .then((loaded: ExplorePrompt[]): void => {
-        setPrompts(loaded);
-      })
-      .catch((): void => {
-        setLoadError("The Explore feed didn't come through. Check your connection.");
-      })
-      .finally((): void => {
-        setIsLoading(false);
-      });
-  };
-
-  useEffect((): void => {
-    fetchPrompts();
-  }, []);
+  const {
+    data: prompts = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey: ["prompts"],
+    queryFn: getPrompts,
+  });
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSearchQuery(event.target.value);
@@ -115,7 +96,7 @@ export function ExplorePage(): JSX.Element {
         </button>
       </div>
 
-      {!isLoading && !loadError && trendingPrompts.length > 0 && (
+      {!isLoading && !isError && trendingPrompts.length > 0 && (
         <section className="flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <h2 className="text-base font-semibold text-orbit-ink">
@@ -165,11 +146,14 @@ export function ExplorePage(): JSX.Element {
       <section className="flex flex-col gap-3">
         {isLoading && <LoadingSkeleton rows={3} />}
 
-        {!isLoading && loadError !== null && (
-          <ErrorState message={loadError} onRetry={fetchPrompts} />
+        {!isLoading && isError && (
+          <ErrorState
+            message="The Explore feed didn't come through. Check your connection."
+            onRetry={(): void => void refetch()}
+          />
         )}
 
-        {!isLoading && loadError === null && filteredPrompts.length === 0 && (
+        {!isLoading && !isError && filteredPrompts.length === 0 && (
           <EmptyState
             title="No conversations here yet"
             message="Be the first to start the conversation."
@@ -177,7 +161,7 @@ export function ExplorePage(): JSX.Element {
         )}
 
         {!isLoading &&
-          loadError === null &&
+          !isError &&
           filteredPrompts.map((prompt: ExplorePrompt): JSX.Element => (
             <ExplorePromptCard
               key={prompt.id}

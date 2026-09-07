@@ -1,12 +1,13 @@
 import type { JSX } from "react";
 import { useNavigate } from "react-router";
 import { useAuthStore } from "../stores/authStore.js";
-import { mockProfiles } from "../lib/mockData.js";
+import { CURRENT_USER_ID, mockProfiles } from "../lib/mockData.js";
+import { getById } from "../types/index.js";
 
 export function ProfilePage(): JSX.Element {
   const navigate = useNavigate();
   const logout = useAuthStore((state) => state.logout);
-  const profile = mockProfiles[0];
+  const profile = getById(mockProfiles, CURRENT_USER_ID);
 
   const handleLogout = (): void => {
     logout();
