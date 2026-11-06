@@ -7,13 +7,15 @@ import { Button } from "@/components/ui/button.js";
 import { Input } from "@/components/ui/input.js";
 import { Label } from "@/components/ui/label.js";
 import { useAuthStore } from "../stores/authStore.js";
-import { login as loginRequest } from "../api/client.js";
+import { login as loginRequest, register as registerRequest } from "../api/client.js";
 
 export function LoginPage(): JSX.Element {
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [isRegistering, setIsRegistering] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
   const handleEmailChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -23,7 +25,10 @@ export function LoginPage(): JSX.Element {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     setError("");
-    try { const result = await loginRequest(email, password); login(result.token, result.user); navigate("/explore"); }
+    try {
+      const result = isRegistering ? await registerRequest(name, email, password) : await loginRequest(email, password);
+      login(result.token, result.user); navigate("/explore");
+    }
     catch { setError("We couldn't sign you in. Check your details and try again."); }
   };
 
@@ -75,6 +80,7 @@ export function LoginPage(): JSX.Element {
           </div>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-3 pt-1">
+            {isRegistering && <div className="flex flex-col gap-1.5"><Label htmlFor="login-name">Name</Label><Input id="login-name" value={name} onChange={(event) => setName(event.target.value)} required minLength={2} /></div>}
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="login-email">Email</Label>
               <Input
@@ -94,8 +100,11 @@ export function LoginPage(): JSX.Element {
             {error && <p className="text-sm text-destructive">{error}</p>}
 
             <Button type="submit" className="mt-1 h-12">
-              Get Started
+              {isRegistering ? "Create account" : "Get Started"}
             </Button>
+            <button type="button" className="text-sm text-orbit-muted underline" onClick={() => setIsRegistering((value) => !value)}>
+              {isRegistering ? "Already have an account? Sign in" : "New here? Create an account"}
+            </button>
           </form>
         </div>
       </div>

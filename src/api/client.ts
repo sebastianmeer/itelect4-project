@@ -19,6 +19,7 @@ async function request<T>(path: string, init: RequestInit = {}, token?: string):
 
 export interface AuthResponse { token: string; user: { id: string; name: string; email: string } }
 export const login = (email: string, password: string): Promise<AuthResponse> => request<AuthResponse>("/auth/login", { method: "POST", body: JSON.stringify({ email, password }) });
+export const register = (name: string, email: string, password: string): Promise<AuthResponse> => request<AuthResponse>("/auth/register", { method: "POST", body: JSON.stringify({ name, email, password }) });
 
 function toExplorePrompt(prompt: ExplorePromptApi): ExplorePrompt {
   return { ...prompt, id: prompt.id ?? prompt._id ?? "", createdAt: new Date(prompt.createdAt) };
