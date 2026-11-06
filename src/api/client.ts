@@ -6,7 +6,19 @@ import type {
   NewExploreResponseApi,
 } from "../types/index.js";
 
-const API_BASE_URL = "http://localhost:3001";
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3001/api";
+
+async function request<T>(path: string, init: RequestInit = {}, token?: string): Promise<T> {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    ...init,
+    headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}), ...init.headers },
+  });
+  if (!response.ok) throw new Error(`Request failed with status ${response.status}`);
+  return (await response.json()) as T;
+}
+
+export interface AuthResponse { token: string; user: { id: string; name: string; email: string } }
+export const login = (email: string, password: string): Promise<AuthResponse> => request<AuthResponse>("/auth/login", { method: "POST", body: JSON.stringify({ email, password }) });
 
 function toExplorePrompt(prompt: ExplorePromptApi): ExplorePrompt {
   return { ...prompt, createdAt: new Date(prompt.createdAt) };
@@ -24,24 +36,19 @@ async function parseJson<T>(response: Response): Promise<T> {
 }
 
 export async function getPrompts(): Promise<ExplorePrompt[]> {
-  const response = await fetch(`${API_BASE_URL}/prompts`);
-  const data = await parseJson<ExplorePromptApi[]>(response);
+  const data = await request<ExplorePromptApi[]>("/prompts");
   return data.map(toExplorePrompt);
 }
 
 export async function getPromptById(promptId: string): Promise<ExplorePrompt> {
-  const response = await fetch(`${API_BASE_URL}/prompts/${promptId}`);
-  const data = await parseJson<ExplorePromptApi>(response);
+  const data = await request<ExplorePromptApi>(`/prompts/${promptId}`);
   return toExplorePrompt(data);
 }
 
 export async function getResponsesByPromptId(
   promptId: string,
 ): Promise<ExploreResponse[]> {
-  const response = await fetch(
-    `${API_BASE_URL}/responses?promptId=${encodeURIComponent(promptId)}`,
-  );
-  const data = await parseJson<ExploreResponseApi[]>(response);
+  const data = await request<ExploreResponseApi[]>(`/responses?promptId=${encodeURIComponent(promptId)}`);
   return data.map(toExploreResponse);
 }
 

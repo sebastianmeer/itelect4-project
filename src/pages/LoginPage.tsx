@@ -7,20 +7,24 @@ import { Button } from "@/components/ui/button.js";
 import { Input } from "@/components/ui/input.js";
 import { Label } from "@/components/ui/label.js";
 import { useAuthStore } from "../stores/authStore.js";
+import { login as loginRequest } from "../api/client.js";
 
 export function LoginPage(): JSX.Element {
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
   const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
   const handleEmailChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setEmail(event.target.value);
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
-    login(`mock-token-${Date.now()}`);
-    navigate("/explore");
+    setError("");
+    try { const result = await loginRequest(email, password); login(result.token, result.user); navigate("/explore"); }
+    catch { setError("We couldn't sign you in. Check your details and try again."); }
   };
 
   return (
@@ -82,6 +86,12 @@ export function LoginPage(): JSX.Element {
                 placeholder="you@example.com"
               />
             </div>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="login-password">Password</Label>
+              <Input id="login-password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} required minLength={8} />
+            </div>
+
+            {error && <p className="text-sm text-destructive">{error}</p>}
 
             <Button type="submit" className="mt-1 h-12">
               Get Started
