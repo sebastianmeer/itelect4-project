@@ -36,7 +36,8 @@ project.
 - Mobile-style web UI with a centered phone-shaped shell on desktop
 - Dark mode
 - Client-side routing with protected pages
-- A local json-server API with persisted client state
+- Typed Express API integration with JWT authentication and owner-scoped responses
+- Protected Orbit Conversation Coach backed by server-side Gemini integration
 - Form validation with React Hook Form + Zod
 
 ## Tech Stack
@@ -47,7 +48,8 @@ project.
 - React Router
 - Zustand (with persisted auth state)
 - TanStack Query
-- json-server
+- Separate Express/TypeScript backend (see the companion `itelect4-backend` repository)
+- MongoDB/Mongoose persistence and JWT auth
 - React Hook Form + Zod
 - shadcn/ui (Button, Input, Label)
 
@@ -83,11 +85,23 @@ npm install
 
 ## Run
 
-Start the local API (port `3001`) and the dev server in two terminals:
+Configure the frontend API origin, then start the dev server:
 
 ```bash
-npm run api
+Copy-Item .env.example .env
 npm run dev
+```
+
+Set `VITE_API_URL` in `.env` to the backend API URL, for example
+`http://localhost:4000/api`. Gemini credentials belong only in the backend.
+
+## Architecture
+
+```mermaid
+flowchart LR
+  Browser[Orbit React frontend] -->|JSON + Bearer JWT| API[Express TypeScript API]
+  API --> Mongo[(MongoDB Atlas)]
+  API --> Gemini[Gemini API]
 ```
 
 To run the original GT1 TypeScript foundation script directly:
@@ -100,7 +114,8 @@ npm run start
 
 ```bash
 npm run build
-npx tsc -b
+npm run typecheck
+npm test
 ```
 
 Both must complete with zero TypeScript errors.

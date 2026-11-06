@@ -9,6 +9,7 @@ import { DiscoverPage } from "./pages/DiscoverPage.js";
 import { ConnectionsPage } from "./pages/ConnectionsPage.js";
 import { ProfilePage } from "./pages/ProfilePage.js";
 import { NotFoundPage } from "./pages/NotFoundPage.js";
+import { CoachPage } from "./pages/CoachPage.js";
 import { useToggle } from "./hooks/useToggle.js";
 
 function App(): JSX.Element {
@@ -29,6 +30,7 @@ function App(): JSX.Element {
           <Route path="/discover" element={<DiscoverPage />} />
           <Route path="/connections" element={<ConnectionsPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/coach" element={<CoachPage />} />
         </Route>
       </Route>
 
