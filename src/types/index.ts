@@ -102,10 +102,12 @@ export type PromptGroups = Record<ExploreCategory, ExplorePrompt[]>;
 
 export type ExplorePromptApi = Omit<ExplorePrompt, "createdAt"> & {
   createdAt: string;
+  _id?: string;
 };
 
 export type ExploreResponseApi = Omit<ExploreResponse, "createdAt"> & {
   createdAt: string;
+  _id?: string;
 };
 
 // Payload for POSTing a new Explore response; the client stamps createdAt,

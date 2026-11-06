@@ -21,11 +21,11 @@ export interface AuthResponse { token: string; user: { id: string; name: string;
 export const login = (email: string, password: string): Promise<AuthResponse> => request<AuthResponse>("/auth/login", { method: "POST", body: JSON.stringify({ email, password }) });
 
 function toExplorePrompt(prompt: ExplorePromptApi): ExplorePrompt {
-  return { ...prompt, createdAt: new Date(prompt.createdAt) };
+  return { ...prompt, id: prompt.id ?? prompt._id ?? "", createdAt: new Date(prompt.createdAt) };
 }
 
 function toExploreResponse(response: ExploreResponseApi): ExploreResponse {
-  return { ...response, createdAt: new Date(response.createdAt) };
+  return { ...response, id: response.id ?? response._id ?? "", createdAt: new Date(response.createdAt) };
 }
 
 async function parseJson<T>(response: Response): Promise<T> {
@@ -47,8 +47,9 @@ export async function getPromptById(promptId: string): Promise<ExplorePrompt> {
 
 export async function getResponsesByPromptId(
   promptId: string,
+  token: string,
 ): Promise<ExploreResponse[]> {
-  const data = await request<ExploreResponseApi[]>(`/responses?promptId=${encodeURIComponent(promptId)}`);
+  const data = await request<ExploreResponseApi[]>(`/responses?promptId=${encodeURIComponent(promptId)}`, {}, token);
   return data.map(toExploreResponse);
 }
 

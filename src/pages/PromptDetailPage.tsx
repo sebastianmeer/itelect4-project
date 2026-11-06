@@ -10,10 +10,12 @@ import { getCategoryTheme } from "../lib/categoryTheme.js";
 import { mockProfiles } from "../lib/mockData.js";
 import { getPromptById, getResponsesByPromptId } from "../api/client.js";
 import { getById, type ExplorePrompt, type ExploreResponse } from "../types/index.js";
+import { useAuthStore } from "../stores/authStore.js";
 
 export function PromptDetailPage(): JSX.Element {
   const { promptId } = useParams<{ promptId: string }>();
   const navigate = useNavigate();
+  const token = useAuthStore((state) => state.token);
 
   const promptQuery = useQuery({
     queryKey: ["prompt", promptId],
@@ -24,8 +26,8 @@ export function PromptDetailPage(): JSX.Element {
 
   const responsesQuery = useQuery({
     queryKey: ["responses", promptId],
-    queryFn: (): Promise<ExploreResponse[]> => getResponsesByPromptId(promptId as string),
-    enabled: promptId !== undefined,
+    queryFn: (): Promise<ExploreResponse[]> => getResponsesByPromptId(promptId as string, token ?? ""),
+    enabled: promptId !== undefined && token !== null,
   });
 
   if (promptId === undefined || promptQuery.isError) {
