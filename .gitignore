@@ -1,4 +1,5 @@
 node_modules/
+backend/
 dist/
 *.tsbuildinfo
 dist-ssr/
