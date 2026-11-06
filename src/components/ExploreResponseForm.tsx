@@ -6,7 +6,7 @@ import { Button } from "./ui/button.js";
 import { Input } from "./ui/input.js";
 import { Label } from "./ui/label.js";
 import { createExploreResponse } from "../api/client.js";
-import { CURRENT_USER_ID } from "../lib/mockData.js";
+import { useAuthStore } from "../stores/authStore.js";
 import {
   exploreResponseSchema,
   type ExploreResponseFormValues,
@@ -19,6 +19,7 @@ export interface ExploreResponseFormProps {
 
 export function ExploreResponseForm({ promptId }: ExploreResponseFormProps): JSX.Element {
   const queryClient = useQueryClient();
+  const token = useAuthStore((state) => state.token);
 
   const {
     register,
@@ -34,7 +35,10 @@ export function ExploreResponseForm({ promptId }: ExploreResponseFormProps): JSX
   const isAnonymous = watch("anonymous");
 
   const submitResponse = useMutation({
-    mutationFn: (payload: NewExploreResponseApi) => createExploreResponse(payload),
+    mutationFn: (payload: NewExploreResponseApi) => {
+      if (!token) throw new Error("Authentication required");
+      return createExploreResponse(payload, token);
+    },
     onSuccess: (): void => {
       reset();
       void queryClient.invalidateQueries({ queryKey: ["responses", promptId] });
@@ -44,10 +48,7 @@ export function ExploreResponseForm({ promptId }: ExploreResponseFormProps): JSX
   const onSubmit = (values: ExploreResponseFormValues): void => {
     submitResponse.mutate({
       promptId,
-      userId: CURRENT_USER_ID,
       body: values.answer,
-      createdAt: new Date().toISOString(),
-      signalCount: 0,
       ...(values.anonymous ? {} : { authorName: values.displayName.trim() }),
     });
   };

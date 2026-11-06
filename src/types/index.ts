@@ -110,6 +110,6 @@ export type ExploreResponseApi = Omit<ExploreResponse, "createdAt"> & {
 
 // Payload for POSTing a new Explore response; the client stamps createdAt,
 // the server assigns the id.
-export type NewExploreResponseApi = Omit<ExploreResponse, "id" | "createdAt"> & {
-  createdAt: string;
+export type NewExploreResponseApi = Pick<ExploreResponse, "promptId" | "body"> & {
+  authorName?: string;
 };

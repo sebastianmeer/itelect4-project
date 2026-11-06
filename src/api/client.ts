@@ -54,10 +54,11 @@ export async function getResponsesByPromptId(
 
 export async function createExploreResponse(
   payload: NewExploreResponseApi,
+  token: string,
 ): Promise<ExploreResponse> {
   const response = await fetch(`${API_BASE_URL}/responses`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
     body: JSON.stringify(payload),
   });
   const data = await parseJson<ExploreResponseApi>(response);
