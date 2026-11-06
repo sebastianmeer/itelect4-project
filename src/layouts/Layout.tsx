@@ -27,6 +27,7 @@ const navItems: NavItem[] = [
   { to: "/explore", label: "Explore", Icon: HomeIcon },
   { to: "/discover", label: "Discover", Icon: CompassIcon },
   { to: "/connections", label: "Chats", Icon: MessageIcon },
+  { to: "/coach", label: "Coach", Icon: MessageIcon },
   { to: "/profile", label: "Profile", Icon: UserIcon },
 ];
 

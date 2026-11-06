@@ -6,20 +6,30 @@ import type {
   NewExploreResponseApi,
 } from "../types/index.js";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3001/api";
+const API_BASE_URL = (import.meta.env.VITE_API_URL ?? "http://localhost:4000/api").replace(/\/$/, "");
 
-async function request<T>(path: string, init: RequestInit = {}, token?: string): Promise<T> {
+export async function request<T>(path: string, init: RequestInit = {}, token?: string): Promise<T> {
+  const controller = new AbortController();
+  const timeout = globalThis.setTimeout(() => controller.abort(), 10_000);
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...init,
+    signal: init.signal ?? controller.signal,
     headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}), ...init.headers },
   });
-  if (!response.ok) throw new Error(`Request failed with status ${response.status}`);
+  globalThis.clearTimeout(timeout);
+  if (!response.ok) {
+    const errorBody = await response.json().catch(() => null) as { message?: string } | null;
+    throw new Error(errorBody?.message ?? `Request failed with status ${response.status}`);
+  }
+  if (response.status === 204) return undefined as T;
   return (await response.json()) as T;
 }
 
 export interface AuthResponse { token: string; user: { id: string; name: string; email: string } }
+export interface AiReview { summary: string; strengths: string[]; improvements: string[]; readiness: "ready" | "almost" | "not-yet" }
 export const login = (email: string, password: string): Promise<AuthResponse> => request<AuthResponse>("/auth/login", { method: "POST", body: JSON.stringify({ email, password }) });
 export const register = (name: string, email: string, password: string): Promise<AuthResponse> => request<AuthResponse>("/auth/register", { method: "POST", body: JSON.stringify({ name, email, password }) });
+export const askAi = (prompt: string, token: string): Promise<AiReview> => request<AiReview>("/ai", { method: "POST", body: JSON.stringify({ prompt }) }, token);
 
 function toExplorePrompt(prompt: ExplorePromptApi): ExplorePrompt {
   return { ...prompt, id: prompt.id ?? prompt._id ?? "", createdAt: new Date(prompt.createdAt) };
@@ -27,13 +37,6 @@ function toExplorePrompt(prompt: ExplorePromptApi): ExplorePrompt {
 
 function toExploreResponse(response: ExploreResponseApi): ExploreResponse {
   return { ...response, id: response.id ?? response._id ?? "", createdAt: new Date(response.createdAt) };
-}
-
-async function parseJson<T>(response: Response): Promise<T> {
-  if (!response.ok) {
-    throw new Error(`Request failed with status ${response.status}`);
-  }
-  return (await response.json()) as T;
 }
 
 export async function getPrompts(): Promise<ExplorePrompt[]> {
@@ -58,11 +61,9 @@ export async function createExploreResponse(
   payload: NewExploreResponseApi,
   token: string,
 ): Promise<ExploreResponse> {
-  const response = await fetch(`${API_BASE_URL}/responses`, {
+  const data = await request<ExploreResponseApi>("/responses", {
     method: "POST",
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
     body: JSON.stringify(payload),
-  });
-  const data = await parseJson<ExploreResponseApi>(response);
+  }, token);
   return toExploreResponse(data);
 }
