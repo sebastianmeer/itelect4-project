@@ -57,10 +57,9 @@ project.
 
 ```text
 itelect4-project/
-├─ db.json                 # json-server data: profiles, prompts, responses, connections
 ├─ sample.ts                # Strict-TypeScript conversion of the provided sample.js (GT1)
 ├─ src/
-│  ├─ api/client.ts          # Centralized fetch calls to the json-server API
+│  ├─ api/client.ts          # Centralized fetch calls to the Express API
 │  ├─ components/            # Reusable Orbit components + shadcn/ui primitives
 │  ├─ hooks/                 # useToggle, usePrevious
 │  ├─ layouts/Layout.tsx      # Shared header + bottom nav + <Outlet />
