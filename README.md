@@ -125,3 +125,14 @@ The GT1-era `sample.ts` at the project root type-checks independently:
 ```bash
 npm run typecheck:gt1
 ```
+
+## Coursework submission
+
+See [`docs/submission.md`](docs/submission.md) for the four primary links,
+PRs, tags, CI workflows, verified commands, browser evidence, and remaining
+provider configuration. The companion backend is
+[`sebastianmeer/itelect4-backend`](https://github.com/sebastianmeer/itelect4-backend).
+
+AI-use disclosure: AI tools assisted with implementation, testing,
+documentation, and debugging. The project author reviewed the changes and
+verified the recorded commands.
