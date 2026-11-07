@@ -6,7 +6,7 @@ import type {
   NewExploreResponseApi,
 } from "../types/index.js";
 
-const API_BASE_URL = (import.meta.env.VITE_API_URL ?? "http://localhost:4000/api").replace(/\/$/, "");
+const API_BASE_URL = (import.meta.env.VITE_API_URL ?? "https://orbit-api-weld-tau.vercel.app/api").replace(/\/$/, "");
 
 export async function request<T>(path: string, init: RequestInit = {}, token?: string): Promise<T> {
   const controller = new AbortController();
